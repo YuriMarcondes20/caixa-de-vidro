@@ -2,7 +2,10 @@ export type Papel = 'morador' | 'sindico'
 
 export interface Sessao {
   papel: Papel
-  email: string
+  /** Morador: celular. Síndico: e-mail. */
+  contato: string
+  bloco?: string
+  apto?: string
 }
 
 export const ROTULO_PAPEL: Record<Papel, string> = {
@@ -17,7 +20,7 @@ export function lerSessao(): Sessao | null {
     const bruto = localStorage.getItem(CHAVE)
     if (!bruto) return null
     const s = JSON.parse(bruto)
-    return (s.papel === 'morador' || s.papel === 'sindico') && typeof s.email === 'string' ? s : null
+    return (s.papel === 'morador' || s.papel === 'sindico') && typeof s.contato === 'string' ? s : null
   } catch {
     return null
   }

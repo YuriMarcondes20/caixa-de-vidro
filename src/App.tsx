@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Marca } from './components/ui'
 import Login from './Login'
-import Morador from './Morador'
+import Morador from './morador/Morador'
 import Sindico from './Sindico'
 import { lerSessao, ROTULO_PAPEL, salvarSessao, type Sessao } from './sessao'
 
@@ -17,13 +17,9 @@ export default function App() {
     setSessao(null)
   }
 
-  if (!sessao) {
-    return (
-      <main className="page">
-        <Login onEntrar={entrar} />
-      </main>
-    )
-  }
+  if (!sessao) return <Login onEntrar={entrar} />
+
+  if (sessao.papel === 'morador') return <Morador sessao={sessao} onSair={sair} />
 
   return (
     <main className="page">
@@ -36,7 +32,7 @@ export default function App() {
           </button>
         </div>
       </header>
-      {sessao.papel === 'morador' ? <Morador /> : <Sindico />}
+      <Sindico />
     </main>
   )
 }
