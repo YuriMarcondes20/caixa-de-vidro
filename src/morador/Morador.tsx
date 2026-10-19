@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Sessao } from '../sessao'
 import { BarraAbas } from './BarraAbas'
 import DecisaoDetalhe from './telas/DecisaoDetalhe'
@@ -15,22 +15,82 @@ import Prestadores from './telas/Prestadores'
 import { ABAS, ROTULO_TELA, type Filtro, type Nav, type NomeAba, type Tela } from './tipos'
 import { usePerguntas } from './usePerguntas'
 
+/** Cada entrada do histórico do navegador guarda a pilha de telas inteira: voltar do celular restaura a tela anterior. */
+interface EstadoHistorico {
+  pilha: Tela[]
+  /** Quantas entradas foram empilhadas desde a abertura do app. */
+  d: number
+}
+
+const INICIO: Tela[] = [{ nome: 'inicio' }]
+
+function estadoSalvo(): EstadoHistorico | null {
+  const s = window.history.state as Partial<EstadoHistorico> | null
+  return s && Array.isArray(s.pilha) && s.pilha.length > 0 && typeof s.d === 'number' ? (s as EstadoHistorico) : null
+}
+
 export default function Morador({ sessao, onSair }: { sessao: Sessao; onSair: () => void }) {
   const p = usePerguntas()
-  const [pilha, setPilha] = useState<Tela[]>([{ nome: 'inicio' }])
+  const [pilha, setPilha] = useState<Tela[]>(() => estadoSalvo()?.pilha ?? INICIO)
+  const pilhaRef = useRef(pilha)
+  const profundidade = useRef(estadoSalvo()?.d ?? 0)
+  pilhaRef.current = pilha
   const topo = pilha[pilha.length - 1]
+
+  // Voltar do celular (ou do navegador) restaura a pilha guardada naquela entrada do histórico.
+  useEffect(() => {
+    if (!estadoSalvo()) window.history.replaceState({ pilha: INICIO, d: 0 } satisfies EstadoHistorico, '')
+    const aoVoltar = (e: PopStateEvent) => {
+      const s = e.state as Partial<EstadoHistorico> | null
+      if (s && Array.isArray(s.pilha) && s.pilha.length > 0) {
+        setPilha(s.pilha)
+        profundidade.current = typeof s.d === 'number' ? s.d : 0
+      }
+    }
+    window.addEventListener('popstate', aoVoltar)
+    return () => window.removeEventListener('popstate', aoVoltar)
+  }, [])
 
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [topo])
 
-  const ir = useCallback((t: Tela) => setPilha((s) => [...s, t]), [])
-  const voltar = useCallback(() => setPilha((s) => (s.length > 1 ? s.slice(0, -1) : s)), [])
+  const empurrar = useCallback((nova: Tela[]) => {
+    profundidade.current += 1
+    window.history.pushState({ pilha: nova, d: profundidade.current } satisfies EstadoHistorico, '')
+    setPilha(nova)
+  }, [])
+
+  const ir = useCallback((t: Tela) => empurrar([...pilhaRef.current, t]), [empurrar])
+  const voltar = useCallback(() => {
+    if (pilhaRef.current.length > 1) window.history.back()
+  }, [])
   const aba = useCallback(
-    (n: NomeAba, filtro?: Filtro) => setPilha([n === 'lancamentos' ? { nome: n, filtro } : { nome: n }]),
-    []
+    (n: NomeAba, filtro?: Filtro) => {
+      // Tocar na aba em que já está não cria uma entrada nova no histórico.
+      const atual = pilhaRef.current
+      if (atual.length === 1 && atual[0].nome === n && !filtro) return
+      empurrar([n === 'lancamentos' ? { nome: n, filtro } : { nome: n }])
+    },
+    [empurrar]
   )
-  const substituir = useCallback((t: Tela) => setPilha((s) => [...s.slice(0, -1), t]), [])
+  const substituir = useCallback((t: Tela) => {
+    const nova = [...pilhaRef.current.slice(0, -1), t]
+    window.history.replaceState({ pilha: nova, d: profundidade.current } satisfies EstadoHistorico, '')
+    setPilha(nova)
+  }, [])
+
+  /** Ao sair, desfaz as entradas empilhadas: o "voltar" do celular não fica "morto" na tela de entrada. */
+  const sair = useCallback(() => {
+    const n = profundidade.current
+    if (n <= 0) return onSair()
+    const depois = () => {
+      window.removeEventListener('popstate', depois)
+      onSair()
+    }
+    window.addEventListener('popstate', depois)
+    window.history.go(-n)
+  }, [onSair])
 
   const anterior = pilha.length > 1 ? ROTULO_TELA[pilha[pilha.length - 2].nome] : 'Início'
   const nav: Nav = { ir, voltar, aba, substituir, anterior }
@@ -39,7 +99,7 @@ export default function Morador({ sessao, onSair }: { sessao: Sessao; onSair: ()
 
   return (
     <>
-      {topo.nome === 'inicio' && <Inicio nav={nav} p={p} onSair={onSair} />}
+      {topo.nome === 'inicio' && <Inicio nav={nav} p={p} onSair={sair} />}
       {topo.nome === 'lancamentos' && <Lancamentos nav={nav} p={p} filtroInicial={topo.filtro} />}
       {topo.nome === 'lancamento' && <LancamentoDetalhe nav={nav} p={p} id={topo.id} />}
       {topo.nome === 'orcamento' && <Orcamento nav={nav} p={p} />}
