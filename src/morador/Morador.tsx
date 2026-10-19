@@ -47,7 +47,7 @@ export default function Morador({ sessao, onSair }: { sessao: Sessao; onSair: ()
       {topo.nome === 'decisao' && <DecisaoDetalhe nav={nav} p={p} id={topo.id} />}
       {topo.nome === 'perguntas' && <Perguntas nav={nav} p={p} />}
       {topo.nome === 'pergunta-nova' && <PerguntaNova nav={nav} p={p} alvo={topo.alvo} autor={autor} />}
-      {topo.nome === 'pergunta' && <PerguntaDetalhe nav={nav} p={p} id={topo.id} />}
+      {topo.nome === 'pergunta' && <PerguntaDetalhe nav={nav} p={p} id={topo.id} nova={topo.nova} />}
       {topo.nome === 'prestadores' && <Prestadores nav={nav} p={p} />}
       {topo.nome === 'prestador' && <Prestador nav={nav} p={p} id={topo.id} />}
       {ehAba && <BarraAbas ativa={topo.nome as NomeAba} onAba={aba} />}

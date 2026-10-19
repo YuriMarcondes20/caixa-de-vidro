@@ -4,12 +4,12 @@ import { CartaoAlvo } from '../componentes'
 import { PRAZO_DIAS, diasDecorridos } from '../dados'
 import type { Props } from '../tipos'
 
-export default function PerguntaDetalhe({ nav, p, id }: Props & { id: string }) {
+export default function PerguntaDetalhe({ nav, p, id, nova }: Props & { id: string; nova?: boolean }) {
   const q = p.perguntas.find((x) => x.id === id)
   if (!q) {
     return (
       <main className="page">
-        <Voltar rotulo={nav.anterior} onClick={nav.voltar} />
+        <Voltar onClick={nav.voltar} />
         <p className="empty">Pergunta não encontrada.</p>
       </main>
     )
@@ -24,7 +24,16 @@ export default function PerguntaDetalhe({ nav, p, id }: Props & { id: string }) 
   return (
     <main className="page com-barra">
       <header className="cab">
-        <Voltar rotulo={nav.anterior} onClick={nav.voltar} />
+        <Voltar onClick={nav.voltar} />
+        {nova && (
+          <div className="sucesso" role="status">
+            <Ic n="ok" size={22} />
+            <span>
+              <strong>Pergunta enviada.</strong> O conselho fiscal vai encaminhá-la ao síndico. Você pode acompanhar a resposta
+              aqui nesta tela.
+            </span>
+          </div>
+        )}
         {q.respondida ? (
           <span className="pill ok">
             <Ic n="ok" />

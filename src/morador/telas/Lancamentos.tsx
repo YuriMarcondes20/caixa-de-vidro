@@ -25,9 +25,10 @@ export default function Lancamentos({ nav, filtroInicial }: Props & { filtroInic
     <main className="page com-abas">
       <header className="cab">
         <div className="cab-linha">
-          <h1 className="page-title">Lançamentos</h1>
+          <h1 className="page-title">Contas do mês</h1>
           <span className="mes">{PERIODO.curto}</span>
         </div>
+        <p className="ajuda">Tudo que entrou e saiu do caixa. Toque numa linha para ver o comprovante.</p>
         <div className="busca">
           <label htmlFor="busca" className="sr-only">
             Buscar lançamento
@@ -36,7 +37,7 @@ export default function Lancamentos({ nav, filtroInicial }: Props & { filtroInic
           <input
             id="busca"
             type="search"
-            placeholder="Buscar por descrição ou fornecedor"
+            placeholder="Buscar (ex.: elevador)"
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
           />

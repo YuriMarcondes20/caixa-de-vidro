@@ -12,7 +12,7 @@ export type Tela =
   | { nome: 'decisao'; id: string }
   | { nome: 'perguntas' }
   | { nome: 'pergunta-nova'; alvo?: Alvo }
-  | { nome: 'pergunta'; id: string }
+  | { nome: 'pergunta'; id: string; nova?: boolean }
   | { nome: 'prestadores' }
   | { nome: 'prestador'; id: string }
 
@@ -21,15 +21,24 @@ export type NomeTela = Tela['nome']
 export const ABAS = ['inicio', 'lancamentos', 'orcamento', 'decisoes', 'perguntas'] as const
 export type NomeAba = (typeof ABAS)[number]
 
+/** Rótulos curtos e simples da barra de baixo. */
+export const ROTULO_ABA: Record<NomeAba, string> = {
+  inicio: 'Início',
+  lancamentos: 'Contas',
+  orcamento: 'Orçamento',
+  decisoes: 'Decisões',
+  perguntas: 'Perguntas'
+}
+
 export const ROTULO_TELA: Record<NomeTela, string> = {
   inicio: 'Início',
-  lancamentos: 'Lançamentos',
+  lancamentos: 'Contas',
   lancamento: 'Lançamento',
   orcamento: 'Orçamento',
   decisoes: 'Decisões',
   decisao: 'Decisão',
   perguntas: 'Perguntas',
-  'pergunta-nova': 'Pedir explicação',
+  'pergunta-nova': 'Fazer uma pergunta',
   pergunta: 'Pergunta',
   prestadores: 'Prestadores',
   prestador: 'Prestador'

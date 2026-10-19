@@ -24,7 +24,7 @@ export function LinhaLancamento({
       <span className="desc">{l.descricao}</span>
       <span className={`amt ${l.valor > 0 ? 'in' : ''}`}>{moedaComSinal(l.valor)}</span>
       <span className="caption">
-        {dataCurta(l.data)} · {l.categoria}
+        {dataCurta(l.data)} · {l.valor > 0 ? 'Entrada' : 'Gasto'} · {l.categoria}
         {l.contexto ? ` · ${l.contexto}` : ''}
       </span>
       <span className={`proof ${CLASSE_ESTADO[l.estado]}`}>

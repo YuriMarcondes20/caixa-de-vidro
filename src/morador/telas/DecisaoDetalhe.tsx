@@ -13,7 +13,7 @@ export default function DecisaoDetalhe({ nav, id }: Props & { id: string }) {
   if (!d) {
     return (
       <main className="page">
-        <Voltar rotulo={nav.anterior} onClick={nav.voltar} />
+        <Voltar onClick={nav.voltar} />
         <p className="empty">Decisão não encontrada.</p>
       </main>
     )
@@ -29,7 +29,7 @@ export default function DecisaoDetalhe({ nav, id }: Props & { id: string }) {
   return (
     <main className="page com-barra">
       <header className="cab">
-        <Voltar rotulo={nav.anterior} onClick={nav.voltar} />
+        <Voltar onClick={nav.voltar} />
         <h1 className="page-title menor">{d.titulo}</h1>
         <p className="caption">
           {d.assembleia} de {dataBR(d.data)} · item {d.pauta} da pauta
@@ -135,7 +135,7 @@ export default function DecisaoDetalhe({ nav, id }: Props & { id: string }) {
       <BarraAcao>
         <button className="btn primary grow" onClick={() => nav.ir({ nome: 'pergunta-nova', alvo: { tipo: 'decisao', id: d.id } })}>
           <Ic n="perguntas" size={18} sw={1.5} />
-          Pedir explicação
+          Perguntar sobre isto
         </button>
       </BarraAcao>
     </main>

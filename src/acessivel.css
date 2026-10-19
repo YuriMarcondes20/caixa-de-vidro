@@ -1,0 +1,380 @@
+/*
+  Acessibilidade para quem tem vista cansada ou pouca prática com celular.
+  Regras: texto de leitura a partir de 15px (corpo 17-18px), alvos de toque de 48px ou mais,
+  uma ideia por linha, ajuda em linguagem simples em cada tela.
+  Este arquivo vem por último e ajusta o que os outros definiram.
+*/
+body {
+  font-size: 18px;
+  line-height: 27px;
+}
+.page-title {
+  font-size: 30px;
+  line-height: 36px;
+}
+.page-title.menor {
+  font-size: 26px;
+  line-height: 32px;
+}
+.heading {
+  font-size: 22px;
+  line-height: 28px;
+}
+.caption {
+  font-size: 15px;
+  line-height: 21px;
+}
+.k {
+  font-size: 16px;
+  line-height: 22px;
+}
+.ajuda {
+  font-size: 17px;
+  line-height: 25px;
+  color: var(--ink);
+}
+.dica {
+  margin-top: var(--space-1);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ink-muted);
+}
+.corpo {
+  font-size: 17px;
+  line-height: 25px;
+}
+.empty {
+  font-size: 17px;
+  line-height: 25px;
+}
+
+/* Números: maiores, e os pares lado a lado viram uma coluna (mais fácil de ler) */
+.num {
+  font-size: 16px;
+  line-height: 23px;
+}
+.split {
+  flex-direction: column;
+}
+.split > div {
+  padding: 12px 14px;
+}
+.split .num {
+  font-size: 18px;
+}
+.stat .num {
+  font-size: 17px;
+  line-height: 24px;
+}
+.total .k {
+  font-size: 16px;
+}
+
+/* Linhas e cartões */
+.desc {
+  font-size: 17px;
+  line-height: 24px;
+}
+.amt {
+  font-size: 16px;
+  line-height: 23px;
+}
+.proof {
+  font-size: 15px;
+  line-height: 21px;
+}
+.item-btn {
+  padding: 16px 0;
+  gap: 6px 16px;
+}
+.item-btn.caixa {
+  padding: 14px 16px;
+}
+.ponto {
+  min-height: 60px;
+}
+.ponto-t {
+  font-size: 17px;
+  line-height: 23px;
+}
+.cartao-link {
+  min-height: 64px;
+  padding: 12px 16px;
+}
+.cartao-titulo {
+  font-size: 18px;
+  line-height: 25px;
+}
+.resp-previa {
+  font-size: 16px;
+  line-height: 23px;
+}
+.ref {
+  font-size: 15px;
+}
+.estado {
+  font-size: 15px;
+}
+.tag {
+  min-height: 30px;
+  font-size: 14px;
+}
+.pill {
+  min-height: 34px;
+  font-size: 16px;
+}
+.row dt,
+.row dd {
+  font-size: 16px;
+  line-height: 23px;
+}
+.link-inline {
+  font-size: 16px;
+}
+.prova-t {
+  font-size: 17px;
+  line-height: 24px;
+}
+.cx-t {
+  font-size: 16px;
+  line-height: 22px;
+}
+.passos {
+  font-size: 16px;
+  line-height: 24px;
+}
+.lt-rotulo {
+  font-size: 16px;
+  line-height: 22px;
+}
+.etapa-nome {
+  font-size: 14px;
+  line-height: 20px;
+}
+.orc-var {
+  font-size: 16px;
+}
+.trilho {
+  height: 10px;
+}
+.trilho.fino {
+  height: 8px;
+}
+.trilho .marcador {
+  height: 16px;
+}
+.votos {
+  height: 12px;
+}
+
+/* Botões, filtros e campos: alvos de toque grandes */
+.btn {
+  min-height: 52px;
+  font-size: 17px;
+}
+.btn.text {
+  min-height: 48px;
+  padding: 0 12px;
+}
+.btn.grow {
+  min-height: 56px;
+}
+.chip {
+  min-height: 48px;
+  font-size: 16px;
+  padding: 0 18px;
+}
+.seg button {
+  min-height: 46px;
+  font-size: 16px;
+}
+.mes {
+  min-height: 36px;
+  font-size: 15px;
+}
+.voltar {
+  min-height: 48px;
+  font-size: 18px;
+}
+.busca input {
+  min-height: 52px;
+  font-size: 17px;
+  padding-left: 46px;
+}
+.busca svg {
+  top: 16px;
+}
+.campo input {
+  min-height: 56px;
+  font-size: 18px;
+}
+.campo textarea,
+.seletor {
+  font-size: 18px;
+  line-height: 26px;
+}
+.seletor {
+  min-height: 52px;
+}
+.rotulo {
+  font-size: 17px;
+  line-height: 24px;
+}
+.erro {
+  font-size: 16px;
+  line-height: 22px;
+}
+.contador {
+  font-size: 15px;
+}
+.aviso {
+  font-size: 16px;
+  line-height: 23px;
+}
+
+/* Barras de baixo */
+.page.com-abas,
+.page.com-barra {
+  padding-bottom: 140px;
+}
+.abas {
+  height: 72px;
+  bottom: 16px;
+}
+.aba {
+  height: 62px;
+  gap: 3px;
+  font-size: 13px;
+}
+.barra {
+  bottom: 16px;
+}
+@media (max-width: 380px) {
+  .aba {
+    font-size: 12px;
+  }
+}
+@media (max-width: 340px) {
+  .aba {
+    font-size: 11px;
+  }
+}
+
+/* Confirmação depois de enviar uma pergunta */
+.sucesso {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  padding: 14px var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--vidro-tint);
+  border: 1px solid var(--vidro);
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 24px;
+}
+.sucesso svg {
+  color: var(--vidro);
+  margin-top: 2px;
+  flex: none;
+}
+
+.letras .seg {
+  max-width: 360px;
+}
+
+/* ===== Letras grandes (botão no Início) ===== */
+html.grande {
+  zoom: 1.15;
+}
+html.grande .figure {
+  font-size: 28px;
+  line-height: 34px;
+}
+html.grande .page-title {
+  font-size: 28px;
+  line-height: 34px;
+}
+html.grande .item-btn {
+  grid-template-columns: minmax(0, 1fr);
+}
+html.grande .item-btn .amt,
+html.grande .item-btn .proof {
+  text-align: left;
+  justify-self: start;
+}
+html.grande .aba {
+  font-size: 12px;
+}
+
+/* Detalhes: rótulo em cima, valor embaixo (mais fácil de ler e nunca estoura) */
+.row {
+  flex-direction: column;
+  gap: 2px;
+  padding: 13px 0;
+}
+.row dd {
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.link-inline {
+  text-align: left;
+}
+
+/* Barras flutuantes quase opacas: o texto delas nunca perde contraste, mesmo passando sobre cores. */
+.abas,
+.barra {
+  background: color-mix(in srgb, var(--surface-raised) 92%, transparent);
+}
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .abas,
+  .barra {
+    background: color-mix(in srgb, var(--surface-raised) 92%, transparent);
+  }
+}
+
+/* Em telas pequenas ou com letras grandes, o que não cabe ao lado desce para a linha de baixo. */
+.cab-linha {
+  flex-wrap: wrap;
+}
+@media (max-width: 340px) {
+  .ponto {
+    flex-wrap: wrap;
+    padding: 10px 0;
+  }
+  .ponto .num,
+  .ponto .caption {
+    flex-basis: 100%;
+    padding-left: 32px;
+  }
+}
+html.grande .ponto {
+  flex-wrap: wrap;
+  padding: 10px 0;
+}
+html.grande .ponto .num,
+html.grande .ponto .caption {
+  flex-basis: 100%;
+  padding-left: 32px;
+}
+
+/* O texto à esquerda quebra de linha em vez de empurrar o botão da direita para baixo. */
+.cab-linha > .caption,
+.cab-linha > h1 {
+  flex: 1 1 0;
+  min-width: 0;
+}
+@media (max-width: 380px) {
+  .abas {
+    width: calc(100% - 12px);
+    padding: 0;
+  }
+  .aba {
+    padding: 0;
+    letter-spacing: -0.01em;
+  }
+}
+html.grande .abas {
+  width: calc(100% - 12px);
+  padding: 0;
+}

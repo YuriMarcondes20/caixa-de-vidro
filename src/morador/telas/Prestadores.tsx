@@ -11,9 +11,9 @@ export default function Prestadores({ nav }: Props) {
   return (
     <main className="page">
       <header className="cab">
-        <Voltar rotulo={nav.anterior} onClick={nav.voltar} />
+        <Voltar onClick={nav.voltar} />
         <h1 className="page-title">Prestadores de serviço</h1>
-        <p className="caption">Quem recebeu dinheiro do condomínio em 2026 · fonte: balancetes. Toque num prestador para ver o histórico.</p>
+        <p className="ajuda">Empresas que receberam dinheiro do condomínio em 2026. Toque numa delas para ver o histórico de serviços e quanto recebeu.</p>
       </header>
 
       <ul className="list" style={{ marginTop: 'var(--space-4)' }}>

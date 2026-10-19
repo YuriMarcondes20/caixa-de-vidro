@@ -40,7 +40,7 @@ export default function Decisoes({ nav }: Props) {
     <main className="page com-abas">
       <header className="cab">
         <h1 className="page-title">Decisões</h1>
-        <p className="caption">Deliberações das assembleias de 2026 · atas publicadas pelo conselho fiscal</p>
+        <p className="ajuda">O que os moradores decidiram nas reuniões (assembleias) de 2026 e como está andando cada decisão.</p>
         <div className="chips" role="group" aria-label="Filtrar decisões" style={{ margin: 0 }}>
           {filtros.map((f) => (
             <button key={f.id} className="chip" aria-pressed={filtro === f.id} onClick={() => setFiltro(f.id)}>

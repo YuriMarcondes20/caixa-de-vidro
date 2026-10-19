@@ -9,7 +9,7 @@ export default function LancamentoDetalhe({ nav, p, id }: Props & { id: string }
   if (!l) {
     return (
       <main className="page">
-        <Voltar rotulo={nav.anterior} onClick={nav.voltar} />
+        <Voltar onClick={nav.voltar} />
         <p className="empty">Lançamento não encontrado.</p>
       </main>
     )
@@ -22,7 +22,7 @@ export default function LancamentoDetalhe({ nav, p, id }: Props & { id: string }
   return (
     <main className="page com-barra">
       <header className="cab">
-        <Voltar rotulo={nav.anterior} onClick={nav.voltar} />
+        <Voltar onClick={nav.voltar} />
         <Status estado={l.estado} />
         <h1 className="page-title">{l.descricao}</h1>
         <p className={`figure ${l.valor > 0 ? 'in' : ''}`}>{moedaComSinal(l.valor)}</p>
@@ -58,7 +58,7 @@ export default function LancamentoDetalhe({ nav, p, id }: Props & { id: string }
           </div>
         )}
         <div className="row">
-          <dt>Deliberação</dt>
+          <dt>Decisão da assembleia</dt>
           <dd>
             {d ? (
               <button className="link-inline" onClick={() => nav.ir({ nome: 'decisao', id: d.id })}>
@@ -98,7 +98,7 @@ export default function LancamentoDetalhe({ nav, p, id }: Props & { id: string }
       <BarraAcao>
         <button className="btn primary grow" onClick={() => nav.ir({ nome: 'pergunta-nova', alvo: { tipo: 'lancamento', id: l.id } })}>
           <Ic n="perguntas" size={18} sw={1.5} />
-          Pedir explicação
+          Perguntar sobre isto
         </button>
       </BarraAcao>
     </main>

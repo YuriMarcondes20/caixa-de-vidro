@@ -24,14 +24,14 @@ export default function PerguntaNova({ nav, p, alvo: alvoInicial, autor }: Props
   function enviar() {
     if (!alvo || !valido) return
     const id = p.criar(texto, alvo, autor)
-    nav.substituir({ nome: 'pergunta', id })
+    nav.substituir({ nome: 'pergunta', id, nova: true })
   }
 
   return (
     <main className="page com-barra">
       <header className="cab">
         <Voltar rotulo="Cancelar" onClick={nav.voltar} />
-        <h1 className="page-title">Pedir explicação</h1>
+        <h1 className="page-title">Fazer uma pergunta</h1>
       </header>
 
       <div className="form">

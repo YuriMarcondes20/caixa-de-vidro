@@ -23,6 +23,7 @@ export default function Orcamento({ nav }: Props) {
     <main className="page com-abas">
       <header className="cab">
         <h1 className="page-title">Orçamento</h1>
+        <p className="ajuda">Compara quanto estava previsto gastar com quanto foi gasto de verdade.</p>
         <div className="seg" role="group" aria-label="Período">
           <button aria-pressed={periodo === 'mes'} onClick={() => setPeriodo('mes')}>
             Setembro
@@ -83,7 +84,7 @@ export default function Orcamento({ nav }: Props) {
             })}
           </ul>
           <p className="caption" style={{ marginTop: 'var(--space-2)' }}>
-            A marca na barra indica o valor previsto. Toque numa categoria para ver os lançamentos.
+            O risquinho na barra marca o valor previsto: se a barra passa dele, gastou-se mais que o previsto. Toque numa linha para ver os gastos.
           </p>
         </>
       )}

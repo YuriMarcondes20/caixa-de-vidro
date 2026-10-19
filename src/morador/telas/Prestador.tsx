@@ -10,7 +10,7 @@ export default function Prestador({ nav, id }: Props & { id: string }) {
   if (!pr) {
     return (
       <main className="page">
-        <Voltar rotulo={nav.anterior} onClick={nav.voltar} />
+        <Voltar onClick={nav.voltar} />
         <p className="empty">Prestador não encontrado.</p>
       </main>
     )
@@ -23,7 +23,7 @@ export default function Prestador({ nav, id }: Props & { id: string }) {
   return (
     <main className="page">
       <header className="cab">
-        <Voltar rotulo={nav.anterior} onClick={nav.voltar} />
+        <Voltar onClick={nav.voltar} />
         <h1 className="page-title menor">{pr.nome}</h1>
         <p className="caption">
           {[pr.doc, pr.categoria].filter(Boolean).join(' · ')}

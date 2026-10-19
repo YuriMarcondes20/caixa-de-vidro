@@ -28,18 +28,18 @@ export default function Perguntas({ nav, p }: Props) {
             Fazer pergunta
           </button>
         </div>
-        <p className="caption">
-          Perguntas e respostas são públicas para todos os moradores. Prazo de resposta definido pelo conselho: {PRAZO_DIAS}{' '}
-          dias.
+        <p className="ajuda">
+          Tem dúvida sobre alguma conta? Pergunte aqui. As perguntas e as respostas ficam visíveis para todos os moradores. O
+          síndico tem {PRAZO_DIAS} dias para responder.
         </p>
-        <div className="seg tres" role="group" aria-label="Filtro">
-          <button aria-pressed={filtro === 'todas'} onClick={() => setFiltro('todas')}>
+        <div className="chips" role="group" aria-label="Filtrar perguntas" style={{ margin: 0 }}>
+          <button className="chip" aria-pressed={filtro === 'todas'} onClick={() => setFiltro('todas')}>
             Todas {p.perguntas.length}
           </button>
-          <button aria-pressed={filtro === 'sem'} onClick={() => setFiltro('sem')}>
+          <button className="chip" aria-pressed={filtro === 'sem'} onClick={() => setFiltro('sem')}>
             Sem resposta {sem.length}
           </button>
-          <button aria-pressed={filtro === 'respondidas'} onClick={() => setFiltro('respondidas')}>
+          <button className="chip" aria-pressed={filtro === 'respondidas'} onClick={() => setFiltro('respondidas')}>
             Respondidas {respondidas.length}
           </button>
         </div>
