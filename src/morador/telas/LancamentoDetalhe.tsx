@@ -41,7 +41,13 @@ export default function LancamentoDetalhe({ nav, p, id }: Props & { id: string }
           <div className="row">
             <dt>Fornecedor</dt>
             <dd>
-              {l.fornecedor.nome}
+              {l.prestadorId ? (
+                <button className="link-inline" onClick={() => nav.ir({ nome: 'prestador', id: l.prestadorId! })}>
+                  {l.fornecedor.nome}
+                </button>
+              ) : (
+                l.fornecedor.nome
+              )}
               {l.fornecedor.doc && (
                 <>
                   <br />

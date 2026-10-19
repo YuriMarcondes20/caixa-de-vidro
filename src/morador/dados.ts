@@ -15,6 +15,8 @@ export interface Lancamento {
   estado: Estado
   comprovante?: string
   fornecedor?: { nome: string; doc?: string }
+  /** Liga o lançamento ao histórico do prestador (tela do prestador). */
+  prestadorId?: string
   decisaoId?: string
   origem: string
   /** Nota do conselho fiscal quando falta ou aguarda comprovante. */
@@ -36,7 +38,7 @@ export const RESUMO = {
   comprovantesTotal: 142
 }
 
-export const LANCAMENTOS: Lancamento[] = [
+const ATUAIS: Lancamento[] = [
   {
     id: 'l-folha',
     descricao: 'Folha — portaria e zeladoria',
@@ -57,6 +59,7 @@ export const LANCAMENTOS: Lancamento[] = [
     estado: 'com',
     comprovante: 'Fatura',
     fornecedor: { nome: 'Distribuidora de energia local' },
+    prestadorId: 'p-energia',
     origem: 'Balancete set/2026 · pág. 3, linha 12'
   },
   {
@@ -68,6 +71,7 @@ export const LANCAMENTOS: Lancamento[] = [
     estado: 'com',
     comprovante: 'NF 1832',
     fornecedor: { nome: 'Elevadores Exemplo Ltda', doc: 'CNPJ 00.000.000/0001-00' },
+    prestadorId: 'p-elevadores',
     origem: 'Balancete set/2026 · pág. 4, linha 29'
   },
   {
@@ -78,6 +82,7 @@ export const LANCAMENTOS: Lancamento[] = [
     categoria: 'Conservação',
     estado: 'aguardando',
     fornecedor: { nome: 'Jardins Exemplo ME', doc: 'CNPJ 00.000.000/0002-00' },
+    prestadorId: 'p-jardins',
     origem: 'Balancete set/2026 · pág. 4, linha 33',
     nota: 'Conselho fiscal, 14/10: comprovante solicitado ao fornecedor. Prazo de entrega em andamento.'
   },
@@ -89,6 +94,7 @@ export const LANCAMENTOS: Lancamento[] = [
     categoria: 'Manutenção',
     estado: 'sem',
     fornecedor: { nome: 'Pinturas Exemplo Ltda', doc: 'CNPJ 00.000.000/0003-00' },
+    prestadorId: 'p-pinturas',
     origem: 'Balancete set/2026 · pág. 4, linha 37',
     nota: 'Conselho fiscal, 14/10: nota fiscal solicitada à administradora. Sem retorno até a publicação.'
   },
@@ -101,6 +107,7 @@ export const LANCAMENTOS: Lancamento[] = [
     estado: 'com',
     comprovante: 'NF 0452',
     fornecedor: { nome: 'Impermeabilizações Exemplo S.A.', doc: 'CNPJ 00.000.000/0004-00' },
+    prestadorId: 'p-imper',
     decisaoId: 'd-laje',
     origem: 'Balancete set/2026 · pág. 5, linha 8'
   },
@@ -112,6 +119,7 @@ export const LANCAMENTOS: Lancamento[] = [
     categoria: 'Manutenção',
     estado: 'sem',
     fornecedor: { nome: 'Elétrica Exemplo Ltda', doc: 'CNPJ 00.000.000/0005-00' },
+    prestadorId: 'p-eletrica',
     origem: 'Balancete set/2026 · pág. 4, linha 41',
     nota: 'Conselho fiscal, 14/10: nota fiscal solicitada à administradora. Sem retorno até a publicação.'
   },
@@ -137,10 +145,78 @@ export const LANCAMENTOS: Lancamento[] = [
     estado: 'com',
     comprovante: 'NF 0417',
     fornecedor: { nome: 'Impermeabilizações Exemplo S.A.', doc: 'CNPJ 00.000.000/0004-00' },
+    prestadorId: 'p-imper',
     decisaoId: 'd-laje',
     origem: 'Balancete ago/2026 · pág. 5, linha 3'
   }
 ]
+
+export interface Prestador {
+  id: string
+  nome: string
+  doc?: string
+  categoria: string
+  contrato?: string
+}
+
+export const PRESTADORES: Prestador[] = [
+  { id: 'p-elevadores', nome: 'Elevadores Exemplo Ltda', doc: 'CNPJ 00.000.000/0001-00', categoria: 'Manutenção', contrato: 'Contrato vigente até 03/2027' },
+  { id: 'p-jardins', nome: 'Jardins Exemplo ME', doc: 'CNPJ 00.000.000/0002-00', categoria: 'Conservação', contrato: 'Contrato mensal de jardinagem' },
+  { id: 'p-pinturas', nome: 'Pinturas Exemplo Ltda', doc: 'CNPJ 00.000.000/0003-00', categoria: 'Manutenção' },
+  { id: 'p-imper', nome: 'Impermeabilizações Exemplo S.A.', doc: 'CNPJ 00.000.000/0004-00', categoria: 'Obras', contrato: 'Deliberação AGE de 14/06/2026' },
+  { id: 'p-eletrica', nome: 'Elétrica Exemplo Ltda', doc: 'CNPJ 00.000.000/0005-00', categoria: 'Manutenção' },
+  { id: 'p-energia', nome: 'Distribuidora de energia local', categoria: 'Concessionárias', contrato: 'Fatura mensal das áreas comuns' }
+]
+
+const MESES_HISTORICO = ['01', '02', '03', '04', '05', '06', '07', '08']
+
+/** Pagamentos de janeiro a agosto de 2026 (os de setembro estão em ATUAIS). Valores positivos = pago. */
+function historico(
+  prestadorId: string,
+  descricao: string,
+  categoria: string,
+  dia: string,
+  pagos: Array<number | null>,
+  prefixo: string,
+  primeiroNumero?: number
+): Lancamento[] {
+  const p = PRESTADORES.find((x) => x.id === prestadorId)!
+  const saida: Lancamento[] = []
+  pagos.forEach((valor, i) => {
+    if (valor === null) return
+    const mes = MESES_HISTORICO[i]
+    saida.push({
+      id: `h-${prestadorId}-${mes}`,
+      descricao,
+      valor: -valor,
+      data: `2026-${mes}-${dia}`,
+      categoria,
+      estado: 'com',
+      comprovante: primeiroNumero === undefined ? prefixo : `${prefixo} ${String(primeiroNumero + i).padStart(4, '0')}`,
+      fornecedor: { nome: p.nome, doc: p.doc },
+      prestadorId,
+      origem: `Balancete ${mes}/2026`
+    })
+  })
+  return saida
+}
+
+const HISTORICO: Lancamento[] = [
+  ...historico('p-elevadores', 'Elevadores — manutenção', 'Manutenção', '22', [4650, 4650, 4650, 4820, 4820, 4820, 4820, 4820], 'NF', 1710),
+  ...historico('p-jardins', 'Jardinagem — áreas comuns', 'Conservação', '18', [2150, 2150, 2150, 2150, 2150, 2150, 2150, 2150], 'NF', 230),
+  ...historico(
+    'p-energia',
+    'Energia — áreas comuns',
+    'Concessionárias',
+    '28',
+    [36210.8, 37940.15, 35118.6, 33870.4, 34560.9, 36420.3, 38115.75, 39802.2],
+    'Fatura'
+  ),
+  ...historico('p-pinturas', 'Pintura da garagem — bloco 2', 'Manutenção', '09', [null, null, 8400, null, null, null, null, null], 'NF', 86),
+  ...historico('p-eletrica', 'Manutenção elétrica — iluminação', 'Manutenção', '14', [null, 1890, null, null, 2740, null, null, null], 'NF', 5520)
+]
+
+export const LANCAMENTOS: Lancamento[] = [...ATUAIS, ...HISTORICO]
 
 export interface CategoriaOrcamento {
   nome: string
@@ -362,3 +438,36 @@ export function tituloAlvo(a: Alvo): string {
   return (a.tipo === 'lancamento' ? lancamento(a.id)?.descricao : decisao(a.id)?.titulo) ?? ''
 }
 export const UNIDADES = 750
+
+export function prestador(id: string): Prestador | undefined {
+  return PRESTADORES.find((p) => p.id === id)
+}
+
+/** Histórico do prestador, do mais recente para o mais antigo. */
+export function lancamentosDoPrestador(id: string): Lancamento[] {
+  return LANCAMENTOS.filter((l) => l.prestadorId === id).sort((a, b) => b.data.localeCompare(a.data))
+}
+
+export interface ResumoPrestador {
+  recebido: number
+  pagamentos: number
+  comComprovante: number
+  semComprovante: number
+  aguardando: number
+  primeiro?: string
+  ultimo?: Lancamento
+}
+
+/** Somas feitas sobre os lançamentos listados: o total sempre bate com o histórico. */
+export function resumoPrestador(id: string): ResumoPrestador {
+  const lista = lancamentosDoPrestador(id)
+  return {
+    recebido: lista.reduce((s, l) => s + Math.abs(l.valor), 0),
+    pagamentos: lista.length,
+    comComprovante: lista.filter((l) => l.estado === 'com').length,
+    semComprovante: lista.filter((l) => l.estado === 'sem').length,
+    aguardando: lista.filter((l) => l.estado === 'aguardando').length,
+    primeiro: lista.length ? lista[lista.length - 1].data : undefined,
+    ultimo: lista[0]
+  }
+}

@@ -10,6 +10,8 @@ import Orcamento from './telas/Orcamento'
 import PerguntaDetalhe from './telas/PerguntaDetalhe'
 import PerguntaNova from './telas/PerguntaNova'
 import Perguntas from './telas/Perguntas'
+import Prestador from './telas/Prestador'
+import Prestadores from './telas/Prestadores'
 import { ABAS, ROTULO_TELA, type Filtro, type Nav, type NomeAba, type Tela } from './tipos'
 import { usePerguntas } from './usePerguntas'
 
@@ -46,6 +48,8 @@ export default function Morador({ sessao, onSair }: { sessao: Sessao; onSair: ()
       {topo.nome === 'perguntas' && <Perguntas nav={nav} p={p} />}
       {topo.nome === 'pergunta-nova' && <PerguntaNova nav={nav} p={p} alvo={topo.alvo} autor={autor} />}
       {topo.nome === 'pergunta' && <PerguntaDetalhe nav={nav} p={p} id={topo.id} />}
+      {topo.nome === 'prestadores' && <Prestadores nav={nav} p={p} />}
+      {topo.nome === 'prestador' && <Prestador nav={nav} p={p} id={topo.id} />}
       {ehAba && <BarraAbas ativa={topo.nome as NomeAba} onAba={aba} />}
     </>
   )

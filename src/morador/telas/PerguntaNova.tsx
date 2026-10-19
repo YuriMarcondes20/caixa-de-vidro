@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Ic } from '../../components/ui'
 import { BarraAcao, Voltar } from '../BarraAbas'
 import { CartaoAlvo } from '../componentes'
-import { DECISOES, LANCAMENTOS, type Alvo } from '../dados'
+import { DECISOES, lancamentosDoMes, type Alvo } from '../dados'
 import type { Props } from '../tipos'
 
 const LIMITE = 500
@@ -48,7 +48,7 @@ export default function PerguntaNova({ nav, p, alvo: alvoInicial, autor }: Props
             >
               <option value="">Escolha um lançamento ou uma decisão</option>
               <optgroup label="Lançamentos">
-                {LANCAMENTOS.map((l) => (
+                {lancamentosDoMes().map((l) => (
                   <option key={l.id} value={`lancamento:${l.id}`}>
                     {l.descricao}
                   </option>

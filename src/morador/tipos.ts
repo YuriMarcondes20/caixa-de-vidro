@@ -13,6 +13,8 @@ export type Tela =
   | { nome: 'perguntas' }
   | { nome: 'pergunta-nova'; alvo?: Alvo }
   | { nome: 'pergunta'; id: string }
+  | { nome: 'prestadores' }
+  | { nome: 'prestador'; id: string }
 
 export type NomeTela = Tela['nome']
 
@@ -28,7 +30,9 @@ export const ROTULO_TELA: Record<NomeTela, string> = {
   decisao: 'Decisão',
   perguntas: 'Perguntas',
   'pergunta-nova': 'Pedir explicação',
-  pergunta: 'Pergunta'
+  pergunta: 'Pergunta',
+  prestadores: 'Prestadores',
+  prestador: 'Prestador'
 }
 
 export interface Nav {

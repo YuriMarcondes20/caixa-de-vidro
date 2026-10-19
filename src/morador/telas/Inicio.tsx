@@ -1,6 +1,6 @@
 import { Hero, Ic } from '../../components/ui'
 import { moeda, moedaComSinal, percentual } from '../../format'
-import { CONDOMINIO, PERIODO, RESUMO, diasDecorridos, lancamentosDoMes, totalOrcamento, variacao } from '../dados'
+import { CONDOMINIO, PERIODO, PRESTADORES, RESUMO, diasDecorridos, lancamentosDoMes, totalOrcamento, variacao } from '../dados'
 import type { Props } from '../tipos'
 
 export default function Inicio({ nav, p, onSair }: Props & { onSair: () => void }) {
@@ -97,6 +97,19 @@ export default function Inicio({ nav, p, onSair }: Props & { onSair: () => void 
             <p className="empty">Nenhum ponto em aberto neste mês.</p>
           )}
         </div>
+      </section>
+
+      <section className="section" aria-labelledby="prest">
+        <h2 className="heading" id="prest">
+          Prestadores de serviço
+        </h2>
+        <button className="cartao-link" onClick={() => nav.ir({ nome: 'prestadores' })}>
+          <Ic n="pessoas" size={18} sw={1.5} />
+          <span className="ponto-t">
+            {PRESTADORES.length} prestadores receberam em 2026 · veja quanto cada um recebeu
+          </span>
+          <Ic n="avancar" size={16} />
+        </button>
       </section>
     </main>
   )
