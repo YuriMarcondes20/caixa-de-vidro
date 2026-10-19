@@ -9,6 +9,13 @@ App web (mobile-first) de prestação de contas de condomínio: o morador vê as
 Entrada, Início, Lançamentos (com detalhe), Orçamento × realizado, Decisões (com detalhe) e Perguntas (com nova pergunta e detalhe).
 Perguntas criadas e perguntas acompanhadas ficam salvas no navegador (`localStorage`).
 
+## Telas do síndico
+
+Painel (o que está esperando por ele), Contas do mês (conferir lançamentos e anexar comprovantes), Novo lançamento, Perguntas dos moradores (responder), Decisões (atualizar o andamento).
+Tudo o que o síndico faz aparece para o morador: resposta publicada, lançamento novo, comprovante anexado e andamento da decisão.
+
+> Na demonstração esses dados ficam no navegador de quem está usando (localStorage). O síndico e o morador só enxergam o que o outro fez se usarem o **mesmo navegador**. Para funcionar entre aparelhos diferentes é preciso um back-end.
+
 ## Rodar
 
 ```bash

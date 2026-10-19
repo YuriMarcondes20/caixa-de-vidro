@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Ic } from '../../components/ui'
 import { BarraAcao, Voltar } from '../BarraAbas'
 import { CartaoAlvo } from '../componentes'
-import { DECISOES, lancamentosDoMes, type Alvo } from '../dados'
+import { listaDecisoes, lancamentosDoMes, type Alvo } from '../dados'
 import type { Props } from '../tipos'
 
 const LIMITE = 500
@@ -55,7 +55,7 @@ export default function PerguntaNova({ nav, p, alvo: alvoInicial, autor }: Props
                 ))}
               </optgroup>
               <optgroup label="Decisões">
-                {DECISOES.map((d) => (
+                {listaDecisoes().map((d) => (
                   <option key={d.id} value={`decisao:${d.id}`}>
                     {d.titulo}
                   </option>

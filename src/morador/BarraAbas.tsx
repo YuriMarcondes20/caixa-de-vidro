@@ -1,18 +1,23 @@
-import { Ic } from '../components/ui'
-import { ABAS, ROTULO_ABA, type NomeAba } from './tipos'
+import { Ic, type NomeIcone } from '../components/ui'
 
-export function BarraAbas({ ativa, onAba }: { ativa: NomeAba; onAba: (n: NomeAba) => void }) {
+export interface Aba {
+  id: string
+  rotulo: string
+  icone: NomeIcone
+}
+
+export function BarraAbas({ abas, ativa, onAba }: { abas: Aba[]; ativa: string; onAba: (id: string) => void }) {
   return (
-    <nav className="abas" aria-label="Navegação principal">
-      {ABAS.map((n) => (
+    <nav className="abas" aria-label="Navegação principal" style={{ gridTemplateColumns: `repeat(${abas.length}, minmax(0, 1fr))` }}>
+      {abas.map((a) => (
         <button
-          key={n}
+          key={a.id}
           className="aba"
-          aria-current={ativa === n ? 'page' : undefined}
-          onClick={() => onAba(n)}
+          aria-current={ativa === a.id ? 'page' : undefined}
+          onClick={() => onAba(a.id)}
         >
-          <Ic n={n} size={24} sw={1.5} />
-          {ROTULO_ABA[n]}
+          <Ic n={a.icone} size={24} sw={1.5} />
+          {a.rotulo}
         </button>
       ))}
     </nav>

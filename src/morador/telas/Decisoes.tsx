@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Ic, type NomeIcone } from '../../components/ui'
 import { dataBR, moeda } from '../../format'
-import { DECISOES, type EstadoDecisao } from '../dados'
+import { listaDecisoes, type EstadoDecisao } from '../dados'
 import type { Props } from '../tipos'
 
 type FiltroDecisao = 'todas' | EstadoDecisao
@@ -26,11 +26,11 @@ export const CLASSE_DECISAO: Record<EstadoDecisao, string> = {
 
 export default function Decisoes({ nav }: Props) {
   const [filtro, setFiltro] = useState<FiltroDecisao>('todas')
-  const contar = (e: EstadoDecisao) => DECISOES.filter((d) => d.estado === e).length
-  const visiveis = DECISOES.filter((d) => filtro === 'todas' || d.estado === filtro)
+  const contar = (e: EstadoDecisao) => listaDecisoes().filter((d) => d.estado === e).length
+  const visiveis = listaDecisoes().filter((d) => filtro === 'todas' || d.estado === filtro)
 
   const filtros: { id: FiltroDecisao; rotulo: string }[] = [
-    { id: 'todas', rotulo: `Todas ${DECISOES.length}` },
+    { id: 'todas', rotulo: `Todas ${listaDecisoes().length}` },
     { id: 'execucao', rotulo: `Em execução ${contar('execucao')}` },
     { id: 'decidida', rotulo: `Decididas ${contar('decidida')}` },
     { id: 'concluida', rotulo: `Concluídas ${contar('concluida')}` }

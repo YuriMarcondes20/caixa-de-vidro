@@ -1,6 +1,6 @@
 import { dataBR, dataCurta, moedaComSinal } from '../format'
 import { IconeEstado, ROTULO_ESTADO, CLASSE_ESTADO } from '../components/ui'
-import { decisao, lancamento, type Alvo, type Lancamento } from './dados'
+import { decisao, lancamento, type Alvo, type Decisao, type EstadoDecisao, type Lancamento } from './dados'
 
 /** Rótulo curto do comprovante, à direita do valor: "valor → prova" na mesma coluna. */
 function rotuloProva(l: Lancamento): string {
@@ -40,6 +40,33 @@ export function LinhaLancamento({
     </button>
   ) : (
     <div className={classe}>{conteudo}</div>
+  )
+}
+
+const ORDEM_ETAPA: Record<EstadoDecisao, number> = { decidida: 0, execucao: 1, concluida: 2 }
+const NOMES_ETAPA = ['Decidida', 'Em execução', 'Concluída']
+
+/** As três etapas de uma decisão: decidida, em execução, concluída. */
+export function EtapasDecisao({ d }: { d: Decisao }) {
+  const idx = ORDEM_ETAPA[d.estado]
+  const concluida = d.estado === 'concluida'
+  return (
+    <ol className="etapas" aria-label="Andamento">
+      {NOMES_ETAPA.map((nome, i) => {
+        const feito = i < idx || (concluida && i === idx)
+        const atual = i === idx && !concluida
+        const marca = feito ? '✓' : atual ? '●' : '○'
+        return (
+          <li key={nome}>
+            <span className="etapa-barra" style={{ background: i <= idx ? 'var(--vidro)' : 'var(--line)' }} />
+            <span className="etapa-nome" style={{ color: atual ? 'var(--vidro)' : i > idx ? 'var(--ink-muted)' : undefined }}>
+              {marca} {nome}
+            </span>
+            <span className="caption">{d.etapas[i]}</span>
+          </li>
+        )
+      })}
+    </ol>
   )
 }
 

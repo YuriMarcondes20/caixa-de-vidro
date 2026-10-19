@@ -121,7 +121,7 @@ export default function Login({ onEntrar }: { onEntrar: (s: Sessao) => void }) {
         <p className="caption">
           {papel === 'morador'
             ? 'O conselho fiscal confere se a unidade está na lista de moradores. Seu nome e apartamento não aparecem para outros moradores.'
-            : 'Área do síndico em definição.'}
+            : 'Acesso do síndico: responda as perguntas dos moradores, lance contas e anexe comprovantes.'}
         </p>
         <p className="caption demo">Versão de demonstração: nenhum SMS é enviado e qualquer dado preenchido entra.</p>
       </form>

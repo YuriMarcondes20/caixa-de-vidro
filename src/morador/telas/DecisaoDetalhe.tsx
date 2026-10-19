@@ -1,12 +1,9 @@
 import { Hero, Ic } from '../../components/ui'
 import { dataBR, moeda } from '../../format'
 import { BarraAcao, Voltar } from '../BarraAbas'
-import { LinhaLancamento } from '../componentes'
-import { UNIDADES, decisao, lancamento, type EstadoDecisao } from '../dados'
+import { EtapasDecisao, LinhaLancamento } from '../componentes'
+import { UNIDADES, decisao, lancamento } from '../dados'
 import type { Props } from '../tipos'
-
-const ORDEM: Record<EstadoDecisao, number> = { decidida: 0, execucao: 1, concluida: 2 }
-const NOMES = ['Decidida', 'Em execução', 'Concluída']
 
 export default function DecisaoDetalhe({ nav, id }: Props & { id: string }) {
   const d = decisao(id)
@@ -19,8 +16,6 @@ export default function DecisaoDetalhe({ nav, id }: Props & { id: string }) {
     )
   }
 
-  const idx = ORDEM[d.estado]
-  const concluida = d.estado === 'concluida'
   const vinculados = d.lancamentos.map(lancamento).filter((l) => l !== undefined)
   const { presentes, favor, contra, abstencoes } = d.votos
   const pct = (n: number) => (n / presentes) * 100
@@ -36,22 +31,7 @@ export default function DecisaoDetalhe({ nav, id }: Props & { id: string }) {
         </p>
       </header>
 
-      <ol className="etapas" aria-label="Andamento">
-        {NOMES.map((nome, i) => {
-          const feito = i < idx || (concluida && i === idx)
-          const atual = i === idx && !concluida
-          const marca = feito ? '✓' : atual ? '●' : '○'
-          return (
-            <li key={nome}>
-              <span className="etapa-barra" style={{ background: i <= idx ? 'var(--vidro)' : 'var(--line)' }} />
-              <span className="etapa-nome" style={{ color: atual ? 'var(--vidro)' : i > idx ? 'var(--ink-muted)' : undefined }}>
-                {marca} {nome}
-              </span>
-              <span className="caption">{d.etapas[i]}</span>
-            </li>
-          )
-        })}
-      </ol>
+      <EtapasDecisao d={d} />
 
       {d.aprovado !== undefined && (
         <Hero espelhado>

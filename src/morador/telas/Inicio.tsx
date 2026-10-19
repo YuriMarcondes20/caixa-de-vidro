@@ -1,23 +1,16 @@
-import { useState } from 'react'
 import { Hero, Ic } from '../../components/ui'
-import { aplicarLetras, lerLetras, type Letras } from '../../letras'
+import { ControleLetras } from '../../components/ControleLetras'
 import { moeda, moedaComSinal, percentual } from '../../format'
 import { CONDOMINIO, PERIODO, PRESTADORES, RESUMO, diasDecorridos, lancamentosDoMes, totalOrcamento, variacao } from '../dados'
 import type { Props } from '../tipos'
 
 export default function Inicio({ nav, p, onSair }: Props & { onSair: () => void }) {
-  const [letras, setLetras] = useState<Letras>(lerLetras)
   const semComprovante = lancamentosDoMes().filter((l) => l.estado === 'sem')
   const somaSem = semComprovante.reduce((s, l) => s + Math.abs(l.valor), 0)
   const aguardando = p.perguntas.filter((x) => !x.respondida)
   const maisAntiga = Math.max(0, ...aguardando.map(diasDecorridos))
   const orc = totalOrcamento()
   const v = variacao(orc.gasto, orc.previsto)
-
-  function escolher(l: Letras) {
-    aplicarLetras(l)
-    setLetras(l)
-  }
 
   return (
     <main className="page com-abas">
@@ -121,19 +114,7 @@ export default function Inicio({ nav, p, onSair }: Props & { onSair: () => void 
         </button>
       </section>
 
-      <section className="section letras" aria-labelledby="lt">
-        <h2 className="heading" id="lt">
-          Tamanho das letras
-        </h2>
-        <div className="seg" role="group" aria-labelledby="lt" style={{ marginTop: 'var(--space-3)' }}>
-          <button aria-pressed={letras === 'normal'} onClick={() => escolher('normal')}>
-            Normal
-          </button>
-          <button aria-pressed={letras === 'grande'} onClick={() => escolher('grande')}>
-            Grande
-          </button>
-        </div>
-      </section>
+      <ControleLetras />
     </main>
   )
 }

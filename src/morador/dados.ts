@@ -1,4 +1,5 @@
 // Dados fictícios de exemplo. Substitua por uma API quando o back-end existir.
+import { dados } from '../store'
 
 export type Estado = 'com' | 'aguardando' | 'sem'
 
@@ -216,7 +217,7 @@ const HISTORICO: Lancamento[] = [
   ...historico('p-eletrica', 'Manutenção elétrica — iluminação', 'Manutenção', '14', [null, 1890, null, null, 2740, null, null, null], 'NF', 5520)
 ]
 
-export const LANCAMENTOS: Lancamento[] = [...ATUAIS, ...HISTORICO]
+const BASE_LANCAMENTOS: Lancamento[] = [...ATUAIS, ...HISTORICO]
 
 export interface CategoriaOrcamento {
   nome: string
@@ -257,7 +258,7 @@ export interface Decisao {
   linkOrcamento?: boolean
 }
 
-export const DECISOES: Decisao[] = [
+const DECISOES_BASE: Decisao[] = [
   {
     id: 'd-laje',
     assembleia: 'AGE',
@@ -405,16 +406,41 @@ export const PERGUNTAS_SEED: Pergunta[] = [
   }
 ]
 
+/** Todos os lançamentos: os de exemplo, os criados pelo síndico e os comprovantes que ele anexou. */
+export function todosLancamentos(): Lancamento[] {
+  const d = dados()
+  return [...BASE_LANCAMENTOS, ...d.extras].map((l) => {
+    const c = d.comprovantes[l.id]
+    return c ? { ...l, estado: 'com' as const, comprovante: c.comprovante, nota: undefined } : l
+  })
+}
+
 export function lancamento(id: string): Lancamento | undefined {
-  return LANCAMENTOS.find((l) => l.id === id)
+  return todosLancamentos().find((l) => l.id === id)
+}
+
+const ORDEM_DECISAO: Record<EstadoDecisao, number> = { decidida: 0, execucao: 1, concluida: 2 }
+
+/** Decisões com o andamento que o síndico informou (se informou). */
+export function listaDecisoes(): Decisao[] {
+  const mudancas = dados().decisoes
+  return DECISOES_BASE.map((d) => {
+    const m = mudancas[d.id]
+    if (!m) return d
+    const idx = ORDEM_DECISAO[m.estado]
+    const etapas: [string, string, string] = [...d.etapas]
+    if (idx >= 1 && !/^(desde|\d)/.test(etapas[1])) etapas[1] = `desde ${m.data}`
+    if (idx === 2) etapas[2] = m.data
+    return { ...d, estado: m.estado, etapas }
+  })
 }
 
 export function decisao(id: string): Decisao | undefined {
-  return DECISOES.find((d) => d.id === id)
+  return listaDecisoes().find((d) => d.id === id)
 }
 
 export function lancamentosDoMes(): Lancamento[] {
-  return LANCAMENTOS.filter((l) => l.data.startsWith(MES_ATUAL)).sort((a, b) => b.data.localeCompare(a.data))
+  return todosLancamentos().filter((l) => l.data.startsWith(MES_ATUAL)).sort((a, b) => b.data.localeCompare(a.data))
 }
 
 export function totalOrcamento(): { gasto: number; previsto: number } {
@@ -445,7 +471,7 @@ export function prestador(id: string): Prestador | undefined {
 
 /** Histórico do prestador, do mais recente para o mais antigo. */
 export function lancamentosDoPrestador(id: string): Lancamento[] {
-  return LANCAMENTOS.filter((l) => l.prestadorId === id).sort((a, b) => b.data.localeCompare(a.data))
+  return todosLancamentos().filter((l) => l.prestadorId === id).sort((a, b) => b.data.localeCompare(a.data))
 }
 
 export interface ResumoPrestador {

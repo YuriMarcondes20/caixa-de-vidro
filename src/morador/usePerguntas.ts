@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { dataHora } from '../format'
+import { useDados, type Dados } from '../store'
 import { PERGUNTAS_SEED, PRAZO_DIAS, type Alvo, type Pergunta } from './dados'
 
 const K_CRIADAS = 'caixa-de-vidro:perguntas'
@@ -22,6 +23,19 @@ function gravar(chave: string, valor: unknown): void {
   }
 }
 
+/** Aplica a resposta que o síndico publicou: a pergunta passa a "respondida" e a linha do tempo fecha. */
+function comResposta(q: Pergunta, r?: Dados['respostas'][string]): Pergunta {
+  if (!r) return q
+  const etapas = q.etapas
+    .filter((e) => !e.rotulo.startsWith('Aguardando'))
+    .map((e) => (e.rotulo === 'Resposta publicada' ? { ...e, quando: r.quando } : e))
+    .map((e) => ({ ...e, estado: 'feito' as const }))
+  if (!etapas.some((e) => e.rotulo === 'Resposta publicada')) {
+    etapas.push({ rotulo: 'Resposta publicada', quando: r.quando, estado: 'feito' })
+  }
+  return { ...q, respondida: true, dias: r.dias, resposta: { autor: 'Síndico', texto: r.texto, quando: r.quando }, etapas }
+}
+
 export interface PerguntasApi {
   perguntas: Pergunta[]
   seguindo: (id: string) => boolean
@@ -34,7 +48,11 @@ export function usePerguntas(): PerguntasApi {
   const [criadas, setCriadas] = useState<Pergunta[]>(() => ler<Pergunta[]>(K_CRIADAS, []))
   const [seguidas, setSeguidas] = useState<string[]>(() => ler<string[]>(K_SEGUINDO, []))
 
-  const perguntas = useMemo(() => [...[...criadas].reverse(), ...PERGUNTAS_SEED], [criadas])
+  const { respostas } = useDados()
+  const perguntas = useMemo(
+    () => [...[...criadas].reverse(), ...PERGUNTAS_SEED].map((q) => comResposta(q, respostas[q.id])),
+    [criadas, respostas]
+  )
 
   const seguindo = useCallback((id: string) => seguidas.includes(id), [seguidas])
 
